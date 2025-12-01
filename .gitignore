@@ -1,0 +1,54 @@
+## Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+
+## NuGet
+*.nupkg
+*.snupkg
+*.nuspec
+project.lock.json
+project.fragment.lock.json
+artifacts/
+packages/
+*.nuget.props
+*.nuget.targets
+
+## Roslyn
+*.ide/
+
+## Rider / JetBrains
+.idea/
+*.sln.iml
+
+## ASP.NET
+appsettings.Development.json
+
+## Azure
+.publishsettings
+*.azurePubxml
+
+## Others
+_ReSharper*/
+*.DotSettings.user
+*.swp
+*.tmp
+*.bak
+*.cache
+*.db
+node_modules/
