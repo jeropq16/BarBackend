@@ -21,7 +21,7 @@ public static class DbSeeder
             };
 
             db.Users.Add(super);
-            await db.SaveChangesAsync();
+            await db.SaveChangesAsync(); 
         }
     }
 }

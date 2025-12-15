@@ -30,7 +30,7 @@ public class OwnerOrAdminHandler : AuthorizationHandler<OwnerOrAdminRequirement>
         int userId = int.Parse(userIdClaim.Value);
         string role = roleClaim.Value;
 
-        // Admin → acceso total
+        // Admin 
         if (role == "Admin")
         {
             context.Succeed(requirement);
@@ -81,7 +81,7 @@ public class OwnerOrAdminHandler : AuthorizationHandler<OwnerOrAdminRequirement>
             return;
         }
 
-        // Si no es dueño, ni barbero, ni admin
+        
         context.Fail();
     }
 }
