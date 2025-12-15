@@ -23,7 +23,6 @@ public class UsersController  : ControllerBase
         _fileStorage = fileStorage;
     }
 
-    [Authorize]
     [HttpGet("profile")]
     public async Task<IActionResult> Profile()
     {
