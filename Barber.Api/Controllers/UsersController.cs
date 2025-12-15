@@ -67,5 +67,13 @@ public class UsersController  : ControllerBase
 
         return Ok(new { url });
     }
+    
+    [HttpPost("barbers")]
+    public async Task<IActionResult> CreateBarber(CreateBarberRequest request)
+    {
+        var barber = await _userService.CreateBarberAsync(request);
+        return Ok(barber);
+    }
+
 
 }

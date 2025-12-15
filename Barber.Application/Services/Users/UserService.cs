@@ -93,5 +93,33 @@ public class UserService
 
         return url;
     }
+    
+    
+    public async Task<UsersProfileResponse> CreateBarberAsync(CreateBarberRequest request)
+    {
+        var exists = await _userRepo.GetByEmailAsync(request.Email);
+        if (exists != null)
+            throw new Exception("Ya existe un usuario con ese correo.");
+
+        var barber = new User
+        {
+            FullName = request.FullName,
+            Email = request.Email,
+            PasswordHash = _passwordHasher.Hash(request.Password),
+            Role = UserRole.Barber,
+            IsActive = true,
+            CreatedAt = DateTime.UtcNow
+        };
+
+        await _userRepo.AddAsync(barber);
+
+        return new UsersProfileResponse
+        {
+            Id = barber.Id,
+            FullName = barber.FullName,
+            Email = barber.Email,
+            Role = barber.Role
+        };
+    }
 
 }
