@@ -121,5 +121,33 @@ public class UserService
             Role = barber.Role
         };
     }
+    
+    public async Task<List<UsersProfileResponse>> GetAllUsersAsync()
+    {
+        var users = await _userRepo.GetAllAsync();
+
+        return users.Select(u => new UsersProfileResponse
+        {
+            Id = u.Id,
+            FullName = u.FullName,
+            Email = u.Email,
+            Role = u.Role
+        }).ToList();
+    }
+    
+    public async Task<List<UsersProfileResponse>> GetBarbersAsync()
+    {
+        var barbers = await _userRepo.GetByRoleAsync(UserRole.Barber);
+
+        return barbers.Select(b => new UsersProfileResponse
+        {
+            Id = b.Id,
+            FullName = b.FullName,
+            Email = b.Email,
+            Role = b.Role
+        }).ToList();
+    }
+
+
 
 }

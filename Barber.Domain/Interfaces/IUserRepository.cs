@@ -1,3 +1,4 @@
+using Barber.Domain.Enums;
 using Barber.Domain.Models;
 
 namespace Barber.Domain.Interfaces;
@@ -8,4 +9,6 @@ public interface IUserRepository
     Task<User?> GetByEmailAsync(string email);
     Task AddAsync(User user);
     Task UpdateAsync(User user);
+    Task<List<User>> GetAllAsync();
+    Task<List<User>> GetByRoleAsync(UserRole role);
 }

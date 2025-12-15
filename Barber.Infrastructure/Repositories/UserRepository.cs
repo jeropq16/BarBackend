@@ -1,3 +1,4 @@
+using Barber.Domain.Enums;
 using Barber.Domain.Interfaces;
 using Barber.Domain.Models;
 using Barber.Infrastructure.Data;
@@ -35,4 +36,17 @@ public class UserRepository : IUserRepository
         _context.Users.Update(user);
         await _context.SaveChangesAsync();
     }
+    
+    public async Task<List<User>> GetAllAsync()
+    {
+        return await _context.Users.ToListAsync();
+    }
+
+    public async Task<List<User>> GetByRoleAsync(UserRole role)
+    {
+        return await _context.Users
+            .Where(u => u.Role == role)
+            .ToListAsync();
+    }
+
 }

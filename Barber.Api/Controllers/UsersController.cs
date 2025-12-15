@@ -74,6 +74,20 @@ public class UsersController  : ControllerBase
         var barber = await _userService.CreateBarberAsync(request);
         return Ok(barber);
     }
+    
+    [HttpGet]
+    public async Task<IActionResult> GetAllUsers()
+    {
+        var users = await _userService.GetAllUsersAsync();
+        return Ok(users);
+    }
+    
+    [HttpGet("barbers")]
+    public async Task<IActionResult> GetBarbers()
+    {
+        var barbers = await _userService.GetBarbersAsync();
+        return Ok(barbers);
+    }
 
 
 }
