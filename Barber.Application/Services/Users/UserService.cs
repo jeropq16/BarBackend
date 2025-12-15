@@ -18,7 +18,7 @@ public class UserService
         _fileStorageService = fileStorageService;
         _passwordHasher = passwordHasher;
     }
-    
+
     public async Task<UsersProfileResponse?> GetByIdAsync(int id)
     {
         var user = await _userRepo.GetByIdAsync(id);
