@@ -9,4 +9,7 @@ public interface IAppointmentRepository
     Task<IEnumerable<Appointment>> GetAllAsync();
     Task AddAsync(Appointment appointment);
     Task UpdateAsync(Appointment appointment);
+    Task<Appointment?> GetByIdWithDetailsAsync(int id);
+
+
 }

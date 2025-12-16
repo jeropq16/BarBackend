@@ -40,4 +40,16 @@ public class AppointmentRepository : IAppointmentRepository
         _context.Appointments.Update(appointment);
         await _context.SaveChangesAsync();
     }
+    
+    public async Task<Appointment?> GetByIdWithDetailsAsync(int id)
+    {
+        return await _context.Appointments
+            .Include(a => a.ClientId)
+            .Include(a => a.BarberId)
+            .Include(a => a.HairCutId)
+            .FirstOrDefaultAsync(a => a.Id == id);
+    }
+
+
+
 }

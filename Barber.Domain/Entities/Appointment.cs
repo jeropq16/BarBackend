@@ -4,7 +4,7 @@ namespace Barber.Domain.Models;
 
 public class Appointment
 {
-    public int Id { get; set; }
+    public int  Id { get; set; }
     public int ClientId { get; set; }
     public int BarberId { get; set; }
     public int HairCutId { get; set; }

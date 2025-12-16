@@ -22,39 +22,7 @@ public class AppointmentService
         _userRepo = userRepo;
         _emailService = emailService;
     }
-
-    public async Task<AppointmentResponse> CreateAsync(CreateAppointmentRequest request)
-    {
-        var service = await _haircutRepo.GetByIdAsync(request.HairCutId);
-
-        if (service == null)
-            throw new Exception("Servicio no encontrado.");
-
-        var endTime = request.StartTime.AddMinutes(service.DurationMinutes);
-
-        var appointment = new Appointment
-        {
-             ClientId = request.ClientId,
-            BarberId = request.BarberId,
-            HairCutId = request.HairCutId,
-            StartTime = request.StartTime,
-            EndTime = endTime
-        };
-
-        await _appointmentRepo.AddAsync(appointment);
-
-        return new AppointmentResponse
-        {
-            Id = appointment.Id,
-            ClientId = appointment.ClientId,
-            BarberId = appointment.BarberId,
-            HairCutId = appointment.HairCutId,
-            StartTime = appointment.StartTime,
-            EndTime = appointment.EndTime,
-            Status = appointment.Status,
-            PaymentStatus = appointment.PaymentStatus
-        };
-    }
+    
     
     public async Task<IEnumerable<BarberAvailabilitySlot>> GetAvailabilityAsync(int barberId, DateTime date, int haircutId)
     {
@@ -167,9 +135,6 @@ public class AppointmentService
             Status = AppointmentStatus.Pending,
             PaymentStatus = PaymentStatus.Pending
         };
-
-                    
-        await _appointmentRepo.AddAsync(appointment);
         
 
         if (client != null)
@@ -201,17 +166,23 @@ public class AppointmentService
             await _emailService.SendEmailAsync(barber.Email, subjectB, bodyB);
         }
         
+        
+        await _appointmentRepo.AddAsync(appointment);
+
+        var created = await _appointmentRepo.GetByIdWithDetailsAsync(appointment.Id);
+
         return new AppointmentResponse
         {
-            Id = appointment.Id,
-            ClientId = appointment.ClientId,
-            BarberId = appointment.BarberId,
-            HairCutId = appointment.HairCutId,
-            StartTime = appointment.StartTime,
-            EndTime = appointment.EndTime,
-            Status = appointment.Status,
-            PaymentStatus = appointment.PaymentStatus
+            Id = created!.Id,
+            ClientId = created.ClientId,
+            BarberId = created.BarberId,
+            HairCutId = created.HairCutId,
+            StartTime = created.StartTime,
+            EndTime = created.EndTime,
+            Status = created.Status,
+            PaymentStatus = created.PaymentStatus
         };
+
         
         
     }
@@ -409,18 +380,13 @@ public class AppointmentService
 
     public async Task<IEnumerable<AppointmentResponse>> GetAllAppointmentsAsync(int userId, string userRole)
     {
-
         var appointments = await _appointmentRepo.GetAllAsync();
-        
+
         if (userRole == "Client")
-        {
             appointments = appointments.Where(a => a.ClientId == userId).ToList();
-        }
 
         if (userRole == "Barber")
-        {
             appointments = appointments.Where(a => a.BarberId == userId).ToList();
-        }
 
         return appointments.Select(a => new AppointmentResponse
         {
@@ -435,9 +401,10 @@ public class AppointmentService
         });
     }
 
+
     public async Task<IEnumerable<AppointmentResponse>> FilterAppointmentsAsync(int userId, string userRole, AppointmentFilterRequest filter)
     {
-        var  appointments = await _appointmentRepo.GetAllAsync();
+        var appointments = await _appointmentRepo.GetAllAsync();
         
         if (userRole == "Client")
             appointments = appointments.Where(a => a.ClientId == userId).ToList();
@@ -478,4 +445,59 @@ public class AppointmentService
             PaymentStatus = a.PaymentStatus
         });
     }
+    
+    public async Task<IEnumerable<AppointmentResponse>> GetAllPublicAsync()
+    {
+        var appointments = await _appointmentRepo.GetAllAsync();
+
+        return appointments.Select(a => new AppointmentResponse
+        {
+            Id = a.Id,
+            ClientId = a.ClientId,
+            BarberId = a.BarberId,
+            HairCutId = a.HairCutId,
+            StartTime = a.StartTime,
+            EndTime = a.EndTime,
+            Status = a.Status,
+            PaymentStatus = a.PaymentStatus
+        });
+    }
+    
+    public async Task<IEnumerable<AppointmentResponse>> FilterAppointmentsPublicAsync(
+        AppointmentFilterRequest filter)
+    {
+        var appointments = await _appointmentRepo.GetAllAsync();
+
+        if (filter.BarberId.HasValue)
+            appointments = appointments.Where(a => a.BarberId == filter.BarberId.Value).ToList();
+
+        if (filter.ClientId.HasValue)
+            appointments = appointments.Where(a => a.ClientId == filter.ClientId.Value).ToList();
+
+        if (filter.HairCutId.HasValue)
+            appointments = appointments.Where(a => a.HairCutId == filter.HairCutId.Value).ToList();
+
+        if (filter.Date.HasValue)
+            appointments = appointments.Where(a => a.StartTime.Date == filter.Date.Value.Date).ToList();
+
+        if (filter.Status.HasValue)
+            appointments = appointments.Where(a => a.Status == filter.Status.Value).ToList();
+
+        if (filter.PaymentStatus.HasValue)
+            appointments = appointments.Where(a => a.PaymentStatus == filter.PaymentStatus.Value).ToList();
+
+        return appointments.Select(a => new AppointmentResponse
+        {
+            Id = a.Id,
+            ClientId = a.ClientId,
+            BarberId = a.BarberId,
+            HairCutId = a.HairCutId,
+            StartTime = a.StartTime,
+            EndTime = a.EndTime,
+            Status = a.Status,
+            PaymentStatus = a.PaymentStatus
+        });
+    }
+
+
 }

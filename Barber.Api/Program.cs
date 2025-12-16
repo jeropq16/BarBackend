@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using System.Text;
 using Barber.Api.Middlewares;
 using Barber.Api.Policies;
@@ -59,8 +60,9 @@ builder.Services.AddAuthentication(options =>
 
         ValidIssuer = jwtConfig.Issuer,
         ValidAudience = jwtConfig.Audience,
-        IssuerSigningKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(jwtConfig.SecretKey))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfig.SecretKey)),
+        NameClaimType = ClaimTypes.NameIdentifier,
+        RoleClaimType = ClaimTypes.Role
     };
 });
 

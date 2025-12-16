@@ -32,7 +32,6 @@ public class AppointmentController : ControllerBase
         return Ok(result);
     }
     
-    [Authorize(Policy = "OwnerOrAdmin")]
     [HttpPut("{id:int}")]
     public async Task<IActionResult> Update(int id, UpdateAppointmentRequest request)
     {
@@ -43,7 +42,6 @@ public class AppointmentController : ControllerBase
         return Ok(result);
     }
     
-    [Authorize]
     [HttpPut("payment-status")]
     public async Task<IActionResult> UpdatePaymentStatus(UpdatePaymentStatusRequest request)
     {
@@ -54,7 +52,6 @@ public class AppointmentController : ControllerBase
         return Ok(result);
     }
     
-    [Authorize]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Cancel(int id)
     {
@@ -66,7 +63,6 @@ public class AppointmentController : ControllerBase
         return NoContent();
     }
     
-    [Authorize]
     [HttpPut("{id:int}/complete")]
     public async Task<IActionResult> Complete(int id)
     {
@@ -77,27 +73,21 @@ public class AppointmentController : ControllerBase
         return Ok(result);
     }
     
-    [Authorize]
     [HttpGet("all")]
     public async Task<IActionResult> GetAll()
     {
-        int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
-        string role = User.FindFirst(ClaimTypes.Role)!.Value;
-
-        var result = await _appointmentService.GetAllAppointmentsAsync(userId, role);
+        var result = await _appointmentService.GetAllPublicAsync();
         return Ok(result);
     }
+
     
-    [Authorize]
     [HttpGet("filter")]
     public async Task<IActionResult> Filter([FromQuery] AppointmentFilterRequest filter)
     {
-        int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
-        string role = User.FindFirst(ClaimTypes.Role)!.Value;
-
-        var result = await _appointmentService.FilterAppointmentsAsync(userId, role, filter);
+        var result = await _appointmentService.FilterAppointmentsPublicAsync(filter);
         return Ok(result);
     }
+
     
     
 
