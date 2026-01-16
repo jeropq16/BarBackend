@@ -84,5 +84,3 @@
 - **Clases de migración y snapshot**: Control de versiones de la base de datos.
 
 ---
-
-> **Nota:** Para mayor detalle, se recomienda revisar cada archivo fuente. Si necesitas documentación detallada de una clase específica, indícalo.
